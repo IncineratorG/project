@@ -2,6 +2,10 @@ import {
   SAVE_VALUES,
   SHOW_VALUES,
   DELETE_RECORD,
+  UPDATE_LAST_RECORD,
+  UPDATING_START,
+  UPDATING_COMPLETE,
+  GET_LAST_VALUE,
 } from '../types/projectActionTypes';
 import {SqliteStorage} from '../../storage/SqliteStorage';
 
@@ -39,17 +43,30 @@ export const deleteRecord = id => {
   };
 };
 
-// export const showValues = ({numbVal, strVal, idVal}) => {
-//   return async dispatch => {
-//     const identShow = await SqliteStorage.getValues({
-//       numbVal: numbVal,
-//       strVal: strVal,
-//       idVal: idVal,
-//     });
-//
-//     dispatch({
-//       type: SHOW_VALUES,
-//       payload: identShow,
-//     });
-//   };
-// };
+export const updateLastRecord = (numer, text) => {
+  return async dispatch => {
+    let startAction = {type: UPDATING_START};
+    dispatch(startAction);
+
+    try {
+      await SqliteStorage.updateLastValue({
+        number: numer,
+        text: text,
+      });
+    } catch (e) {
+      console.log('ERROE: ' + e);
+    }
+
+    let completeAction = {type: UPDATING_COMPLETE};
+    dispatch(completeAction);
+  };
+};
+
+export const getLastValue = () => {
+  return async dispatch => {
+    const lastVal = await SqliteStorage.getLastValue();
+
+    const action = {type: GET_LAST_VALUE, payload: lastVal};
+    dispatch(action);
+  };
+};
