@@ -5,6 +5,5 @@ import {projectReducer} from './reducers/projectReducer';
 const reducers = combineReducers({
   project: projectReducer,
 });
-
 const store = createStore(reducers, applyMiddleware(thunk));
 export default store;
