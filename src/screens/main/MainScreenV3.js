@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
@@ -12,27 +12,29 @@ import {
   saveValues,
   showValues,
   deleteRecord,
+  updateLastRecord,
+  getLastValue,
 } from '../../store/actions/projectActions';
 
-const MainScreen = () => {
+const MainScreenV3 = () => {
   const uiDispatch = useDispatch();
   const [text, setText] = useState('');
   const [number, setNumber] = useState(0);
-  const [idText, setIdText] = useState('');
 
-  let idProject = useSelector(state => state.project.id);
-  // console.log('idProject : ' + idProject);
+  let updatingStatus = useSelector(state => state.project.updatingStatus);
+  console.log('UpdatingStatus :' + updatingStatus);
 
-  let dataDB = useSelector(state => state.project.dataBaseData);
-  for (let i = 0; i < dataDB.length; ++i) {
-    let record = dataDB.item(i);
+  let showValue = useSelector(state => state.project.lastVal);
+  if (showValue.length) {
     console.log(
-      record.id + ' ' + record.stringValue + ' ' + record.numberValue,
+      'Последнее значение: ' +
+        showValue.item(0).id +
+        ' ' +
+        showValue.item(0).numberValue +
+        ' ' +
+        showValue.item(0).stringValue,
     );
   }
-
-  let removedId = useSelector(state => state.project.lastRemovedId);
-  console.log('removedId: ' + removedId);
 
   const plusButtonHandler = () => {
     if (number < 5) {
@@ -49,25 +51,12 @@ const MainScreen = () => {
     setText(textValue);
   };
 
-  const deletIdTextHandler = textValue => {
-    setIdText(textValue);
-  };
-
   const saveButtonHandler = () => {
-    uiDispatch(
-      saveValues({
-        numberVal: number,
-        stringVal: text,
-      }),
-    );
+    uiDispatch(updateLastRecord(number, text));
   };
 
-  const deleteButtonHandler = () => {
-    uiDispatch(deleteRecord(idText));
-  };
-
-  const showButtonHandler = () => {
-    uiDispatch(showValues());
+  const lastValuesButtonHandler = () => {
+    uiDispatch(getLastValue());
   };
 
   return (
@@ -92,18 +81,11 @@ const MainScreen = () => {
       <View>
         <Button title={'Сохранить'} onPress={saveButtonHandler} />
       </View>
-      <View style={styles.showButton}>
-        {<Button title={'Выводить'} onPress={showButtonHandler} />}
-      </View>
-      <TextInput
-        keyboardType={'numeric'}
-        style={styles.nameInput}
-        value={idText}
-        placeholder="Удаление по ID"
-        onChangeText={deletIdTextHandler}
-      />
-      <View style={styles.deleteButton}>
-        {<Button title={'Удалить'} onPress={deleteButtonHandler} />}
+      <View>
+        <Button
+          title={'Выгрузить последнее значение'}
+          onPress={lastValuesButtonHandler}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -147,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainScreen;
+export default MainScreenV3;
