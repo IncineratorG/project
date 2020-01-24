@@ -1,0 +1,2 @@
+export const LOAD_SHOPPING_LIST = 'LOAD_ALL_SHOPPING_LIST';
+export const ADD_PRODUCT = 'ADD_PRODUCT';
