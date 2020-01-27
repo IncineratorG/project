@@ -20,10 +20,12 @@ export class SqliteStorageShoppingList {
       PRODUCT_TABLE_ID +
       ' INTEGER PRIMARY KEY NOT NULL, ' +
       PRODUCT_TABLE_NAME +
-      ' TEXT NOT NULL, ' +
+      ' TEXT, ' +
       PRODUCT_TABLE_COUNT +
-      ' TEXT NOT NULL, ' +
+      ' TEXT, ' +
       PRODUCT_TABLE_COUNT_TYPE +
+      ' TEXT, ' +
+      PRODUCT_TABLE_NOTE +
       ' TEXT)';
 
     return new Promise((resolve, reject) => {
@@ -52,6 +54,7 @@ export class SqliteStorageShoppingList {
       });
     });
   }
+
   static addProduct({productName, count, countType, note}) {
     const addProductStatement =
       'INSERT INTO ' +
@@ -72,6 +75,37 @@ export class SqliteStorageShoppingList {
           addProductStatement,
           [productName, count, countType, note],
           (_, result) => resolve(result.insertId),
+          (_, error) => reject(error),
+        );
+      });
+    });
+  }
+
+  static deleteAll() {
+    const deleteAllStatement =
+      'DELETE FROM ' + PRODUCT_TABLE + ' WHERE ' + PRODUCT_TABLE_ID + ' > 0';
+
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          deleteAllStatement,
+          [],
+          (_, result) => resolve(result.rowsAffected),
+          (_, error) => reject(error),
+        );
+      });
+    });
+  }
+
+  static deleteProduct(id) {
+    const deleteProductStatement =
+      'DELETE FROM ' + PRODUCT_TABLE + ' WHERE ' + PRODUCT_TABLE_ID + ' = ?';
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          deleteProductStatement,
+          [id],
+          (_, result) => resolve(result.rowsAffected),
           (_, error) => reject(error),
         );
       });

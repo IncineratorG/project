@@ -1,2 +1,4 @@
 export const LOAD_SHOPPING_LIST = 'LOAD_ALL_SHOPPING_LIST';
 export const ADD_PRODUCT = 'ADD_PRODUCT';
+export const DELETE_ALL = 'DELETE_ALL';
+export const DELETE_PRODUCT = 'DELETE_PRODUCT';

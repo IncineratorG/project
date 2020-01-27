@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import {LoadShoppingList} from '../../store/actions/shoppingListActions';
 import {addProduct} from '../../store/actions/shoppingListActions';
+import MainShoppingListScreen from '../main/MainShoppingListScreen';
 
-const AddProductScreen = () => {
+const AddProductScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [productName, setproductName] = useState('');
   const [count, setCount] = useState('');
@@ -20,54 +21,75 @@ const AddProductScreen = () => {
 
   // let shoppingLists = useSelector(state => state.shoppingList.allShoppingLists);
 
-  const ProductNameChangeHandler = textValue => {
+  const productNameChangeHandler = textValue => {
     setproductName(textValue);
   };
 
-  const CountChangeHandler = textValue => {
+  const countChangeHandler = textValue => {
     setCount(textValue);
   };
 
-  const CountTypeChangeHandler = textValue => {
+  const countTypeChangeHandler = textValue => {
     setCountType(textValue);
   };
 
-  const NoteChangeHandler = textValue => {
+  const noteChangeHandler = textValue => {
     setNote(textValue);
   };
 
+  const saveButtonHandler = () => {
+    dispatch(
+      addProduct({
+        productNameValue: productName,
+        countValue: count,
+        countTypeValue: countType,
+        noteValue: note,
+      }),
+    );
+    navigation.navigate('MainShoppingList');
+  };
+
+  AddProductScreen.navigationOptions = ({navigation}) => ({
+    headerTitle: 'Редактирование',
+  });
+
   return (
-    <KeyboardAvoidingView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
       <View style={styles.nameInputContainer}>
         <TextInput
           style={styles.nameInput}
           value={productName}
           placeholder="Название продукта"
-          onChangeText={ProductNameChangeHandler}
+          onChangeText={productNameChangeHandler}
         />
         <TextInput
           style={styles.quantityInput}
           value={count}
-          placeholder="Колличество"
-          onChangeText={CountChangeHandler}
+          placeholder="Количество"
+          onChangeText={countChangeHandler}
+          keyboardType="numeric"
         />
         <TextInput
           style={styles.unitInput}
           value={countType}
           placeholder="Единица"
-          onChangeText={CountTypeChangeHandler}
+          onChangeText={countTypeChangeHandler}
         />
         <TextInput
           style={styles.noteInput}
           value={note}
           placeholder="Примечание"
-          onChangeText={NoteChangeHandler}
+          onChangeText={noteChangeHandler}
         />
       </View>
       <View style={styles.button}>
-        <Button title={'Сохранить'} color={'#20B2AA'} />
+        <Button
+          title={'Сохранить'}
+          color={'#20B2AA'}
+          onPress={saveButtonHandler}
+        />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

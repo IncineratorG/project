@@ -4,7 +4,7 @@ import {projectReducer} from './reducers/projectReducer';
 import {shoppingListReduser} from './reducers/shoppingListReducer';
 
 const reducers = combineReducers({
-  project: shoppingListReduser,
+  shoppingList: shoppingListReduser,
 });
 const store = createStore(reducers, applyMiddleware(thunk));
 export default store;

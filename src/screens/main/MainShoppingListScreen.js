@@ -13,22 +13,22 @@ import {getLastValue} from '../../store/actions/projectActions';
 import {LoadShoppingList} from '../../store/actions/shoppingListActions';
 import {shoppingListReduser} from '../../store/reducers/shoppingListReducer';
 import {addProduct} from '../../store/actions/shoppingListActions';
-
-const DATA = useSelector;
+import {deleteAllProducts} from '../../store/actions/shoppingListActions';
 
 const MainShoppingListScreen = ({navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(LoadShoppingList());
+  }, [dispatch]);
+
+  let shoppingList = useSelector(state => state.shoppingList.productList);
+  shoppingList.sort((s1, s2) => {
+    return s2 > s1;
   });
 
-  let shoppingList = useSelector(
-    state => state.shoppingListReduser.allShoppingLists,
-  );
-
   const deleteAllHandler = () => {
-    dispatch(LoadShoppingList());
+    dispatch(deleteAllProducts());
   };
 
   return (
@@ -36,7 +36,7 @@ const MainShoppingListScreen = ({navigation}) => {
       <FlatList
         data={shoppingList}
         renderItem={({item}) => {
-          return <ShoppingListItem item={item} />;
+          return <ShoppingListItem listItem={item} />;
         }}
       />
       <View style={styles.button}>
@@ -52,7 +52,7 @@ const MainShoppingListScreen = ({navigation}) => {
           <Button
             title={'Добавить'}
             onPress={() => {
-              navigation.navigate('Редактирование');
+              navigation.navigate('AddProduct');
             }}
           />
         </View>
@@ -61,6 +61,10 @@ const MainShoppingListScreen = ({navigation}) => {
   );
 };
 
+MainShoppingListScreen.navigationOptions = ({navigation}) => ({
+  headerTitle: 'Список покупок',
+});
+
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 10,
@@ -68,6 +72,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   button: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    marginBottom: 5,
+    marginLeft: 5,
+    marginRight: 5,
     justifyContent: 'flex-end',
     flex: 1,
     // backgroundColor: 'grey',

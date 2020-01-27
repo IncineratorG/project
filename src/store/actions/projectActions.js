@@ -54,7 +54,7 @@ export const updateLastRecord = (numer, text) => {
         text: text,
       });
     } catch (e) {
-      console.log('ERROE: ' + e);
+      console.log('ERROR: ' + e);
     }
 
     let completeAction = {type: UPDATING_COMPLETE};

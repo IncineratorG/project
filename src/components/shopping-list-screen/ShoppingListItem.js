@@ -1,7 +1,15 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {deleteProduct} from '../../store/actions/shoppingListActions';
 
-const ShoppingListItem = ({item}) => {
+const ShoppingListItem = ({listItem}) => {
+  const dispatch = useDispatch();
+
+  const deleteHandler = () => {
+    dispatch(deleteProduct(listItem.id));
+  };
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.infoContainer}>
@@ -11,32 +19,34 @@ const ShoppingListItem = ({item}) => {
               style={styles.productName}
               numberOfLines={1}
               elipsizeMode="tail">
-              Хлеб
+              {listItem.name}
             </Text>
           </View>
           <View style={styles.quantityContainer}>
             <View style={styles.quantityCountContainer}>
               <Text style={styles.quantityCount} numberOfLines={1}>
-                4
+                {listItem.count}
               </Text>
             </View>
             <View style={styles.quantityUnitContainer}>
               <Text style={styles.quantityUnit} numberOfLines={1}>
-                кг
+                {listItem.countType}
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.noteContainer}>
-          <Text style={styles.note}>Примечание</Text>
+          <Text style={styles.note}>{listItem.note}</Text>
         </View>
       </View>
-      <View style={styles.statusContainer}>
-        <View style={styles.statusNotFinished} />
-      </View>
+      <TouchableOpacity onPress={deleteHandler}>
+        <View style={styles.statusContainer}>
+          <View style={styles.statusNotFinished} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
