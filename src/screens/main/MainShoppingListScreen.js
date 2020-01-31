@@ -1,18 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  Text,
-  View,
-  FlatList,
-  StyleSheet,
-  Button,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, FlatList, StyleSheet, Button, Text} from 'react-native';
 import ShoppingListItem from '../../components/shopping-list-screen/ShoppingListItem';
-import {getLastValue} from '../../store/actions/projectActions';
 import {LoadShoppingList} from '../../store/actions/shoppingListActions';
-import {shoppingListReduser} from '../../store/reducers/shoppingListReducer';
-import {addProduct} from '../../store/actions/shoppingListActions';
 import {deleteAllProducts} from '../../store/actions/shoppingListActions';
 
 const MainShoppingListScreen = ({navigation}) => {
@@ -22,43 +12,59 @@ const MainShoppingListScreen = ({navigation}) => {
     dispatch(LoadShoppingList());
   }, [dispatch]);
 
-  let shoppingList = useSelector(state => state.shoppingList.productList);
+  let shoppingList = useSelector(state => state.shoppingList.productList.data);
   shoppingList.sort((s1, s2) => {
     return s2 > s1;
   });
+  // shoppingList.sort((s1, s2) => {
+  //   return s1.status < s2.status;
+  // });
 
   const deleteAllHandler = () => {
     dispatch(deleteAllProducts());
   };
 
-  return (
-    <KeyboardAvoidingView style={styles.mainContainer}>
-      <FlatList
-        data={shoppingList}
-        renderItem={({item}) => {
-          return <ShoppingListItem listItem={item} />;
-        }}
-      />
-      <View style={styles.button}>
-        <View style={styles.deleteButton}>
-          <Button
-            style={styles.deleteButtonStyle}
-            title={'Удалить Все'}
-            color={'#FF7F50'}
-            onPress={deleteAllHandler}
-          />
-        </View>
+  const addProductHandler = () => {
+    navigation.navigate('AddProduct');
+  };
+
+  if (!shoppingList.length) {
+    return (
+      <View style={styles.mainContainer}>
+        <Text style={styles.noProduct}> Ваш список наверное пуст</Text>
         <View style={styles.addButton}>
-          <Button
-            title={'Добавить'}
-            onPress={() => {
-              navigation.navigate('AddProduct');
-            }}
-          />
+          <Button title={'Добавить'} onPress={addProductHandler} />
         </View>
       </View>
-    </KeyboardAvoidingView>
-  );
+    );
+  } else {
+    return (
+      <View style={styles.mainContainer}>
+        <FlatList
+          style={styles.flatlistContainer}
+          data={shoppingList}
+          renderItem={({item}) => {
+            return <ShoppingListItem listItem={item} navigation={navigation} />;
+          }}
+          keyExtractor={item => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+        <View style={styles.button}>
+          <View style={styles.deleteButton}>
+            <Button
+              style={styles.deleteButtonStyle}
+              title={'Удалить Все'}
+              color={'#FF7F50'}
+              onPress={deleteAllHandler}
+            />
+          </View>
+          <View style={styles.addButton}>
+            <Button title={'Добавить'} onPress={addProductHandler} />
+          </View>
+        </View>
+      </View>
+    );
+  }
 };
 
 MainShoppingListScreen.navigationOptions = ({navigation}) => ({
@@ -70,6 +76,16 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  noProduct: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 350,
+    fontSize: 30,
+  },
+  flatlistContainer: {
+    marginBottom: 85,
   },
   button: {
     position: 'absolute',

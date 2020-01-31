@@ -1,3 +1,5 @@
+import {PRODUCT_NOT_COMPLETED} from './data/ProductStatus';
+
 const DB_NAME = 'shoppingList.db';
 
 const PRODUCT_TABLE = 'productTable';
@@ -6,6 +8,7 @@ const PRODUCT_TABLE_NAME = 'name';
 const PRODUCT_TABLE_COUNT = 'count';
 const PRODUCT_TABLE_COUNT_TYPE = 'countType';
 const PRODUCT_TABLE_NOTE = 'note';
+const PRODUCT_TABLE_STATUS = 'status';
 
 const SQlite = require('react-native-sqlite-storage');
 const db = SQlite.openDatabase(DB_NAME);
@@ -26,6 +29,8 @@ export class SqliteStorageShoppingList {
       PRODUCT_TABLE_COUNT_TYPE +
       ' TEXT, ' +
       PRODUCT_TABLE_NOTE +
+      ' TEXT, ' +
+      PRODUCT_TABLE_STATUS +
       ' TEXT)';
 
     return new Promise((resolve, reject) => {
@@ -40,7 +45,7 @@ export class SqliteStorageShoppingList {
     });
   }
 
-  static loadProducts() {
+  static loadProductsList() {
     const loadValuesStatement = 'SELECT * FROM ' + PRODUCT_TABLE;
 
     return new Promise((resolve, reject) => {
@@ -67,13 +72,15 @@ export class SqliteStorageShoppingList {
       PRODUCT_TABLE_COUNT_TYPE +
       ', ' +
       PRODUCT_TABLE_NOTE +
-      ') VALUES (?, ?, ?, ?)';
+      ', ' +
+      PRODUCT_TABLE_STATUS +
+      ') VALUES (?, ?, ?, ?, ?)';
 
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
           addProductStatement,
-          [productName, count, countType, note],
+          [productName, count, countType, note, PRODUCT_NOT_COMPLETED],
           (_, result) => resolve(result.insertId),
           (_, error) => reject(error),
         );
@@ -105,6 +112,71 @@ export class SqliteStorageShoppingList {
         tx.executeSql(
           deleteProductStatement,
           [id],
+          (_, result) => resolve(result.rowsAffected),
+          (_, error) => reject(error),
+        );
+      });
+    });
+  }
+
+  static changeProductStatus(status, id) {
+    const changeProductStatusStatement =
+      'UPDATE ' +
+      PRODUCT_TABLE +
+      ' SET ' +
+      PRODUCT_TABLE_STATUS +
+      ' = ? WHERE ' +
+      PRODUCT_TABLE_ID +
+      ' = ? ';
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          changeProductStatusStatement,
+          [status, id],
+          (_, result) => resolve(result.rowsAffected),
+          (_, error) => reject(error),
+        );
+      });
+    });
+  }
+
+  static loadProduct(id) {
+    const loadProductStatusStatement =
+      'SELECT * FROM ' + PRODUCT_TABLE + ' WHERE ' + PRODUCT_TABLE_ID + ' = ? ';
+
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          loadProductStatusStatement,
+          [id],
+          (tx, result) => resolve(result.rows),
+          (tx, error) => reject(error),
+        );
+      });
+    });
+  }
+
+  static updateProduct(id, productName, count, countType, note) {
+    const updateProductStatement =
+      'UPDATE ' +
+      PRODUCT_TABLE +
+      ' SET ' +
+      PRODUCT_TABLE_NAME +
+      ' = ?, ' +
+      PRODUCT_TABLE_COUNT +
+      ' = ?, ' +
+      PRODUCT_TABLE_COUNT_TYPE +
+      ' = ?, ' +
+      PRODUCT_TABLE_NOTE +
+      ' = ? WHERE ' +
+      PRODUCT_TABLE_ID +
+      ' = ?';
+
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          updateProductStatement,
+          [productName, count, countType, note, id],
           (_, result) => resolve(result.rowsAffected),
           (_, error) => reject(error),
         );

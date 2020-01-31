@@ -3,6 +3,8 @@ import {createStackNavigator} from 'react-navigation-stack';
 import MainScreenV3 from '../../screens/main/MainScreenV3';
 import MainShoppingListScreen from '../../screens/main/MainShoppingListScreen';
 import AddProductScreen from '../../screens/create-shopping-list/AddProductScreen';
+import EditProductScreen from '../../screens/edit/EditProductScreen';
+import ShoppingListItem from '../shopping-list-screen/ShoppingListItem';
 
 const MainStack = createStackNavigator({
   MainShoppingList: {
@@ -10,6 +12,9 @@ const MainStack = createStackNavigator({
   },
   AddProduct: {
     screen: AddProductScreen,
+  },
+  EditScreen: {
+    screen: EditProductScreen,
   },
 });
 

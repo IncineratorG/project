@@ -1,28 +1,34 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Button,
-  KeyboardAvoidingView,
-} from 'react-native';
-import {LoadShoppingList} from '../../store/actions/shoppingListActions';
-import {addProduct} from '../../store/actions/shoppingListActions';
-import MainShoppingListScreen from '../main/MainShoppingListScreen';
+import {View, TextInput, StyleSheet, Button, Text} from 'react-native';
+import {updateProduct} from '../../store/actions/shoppingListActions';
 
-const AddProductScreen = ({navigation}) => {
+const EditProductScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const [productName, setproductName] = useState('');
+
+  const [productName, setProductName] = useState('');
   const [count, setCount] = useState('');
   const [countType, setCountType] = useState('');
   const [note, setNote] = useState('');
 
-  // let shoppingLists = useSelector(state => state.shoppingList.allShoppingLists);
+  const productLoading = useSelector(
+    state => state.shoppingList.editingProduct.loading,
+  );
+  const product = useSelector(
+    state => state.shoppingList.editingProduct.product,
+  );
+
+  useEffect(() => {
+    if (!productLoading) {
+      setProductName(product.name);
+      setCount(product.count);
+      setCountType(product.countType);
+      setNote(product.note);
+    }
+  }, [productLoading, product]);
 
   const productNameChangeHandler = textValue => {
-    setproductName(textValue);
+    setProductName(textValue);
   };
 
   const countChangeHandler = textValue => {
@@ -38,18 +44,17 @@ const AddProductScreen = ({navigation}) => {
   };
 
   const saveButtonHandler = () => {
-    dispatch(
-      addProduct({
-        productNameValue: productName,
-        countValue: count,
-        countTypeValue: countType,
-        noteValue: note,
-      }),
-    );
+    dispatch(updateProduct(product.id, productName, count, countType, note));
     navigation.navigate('MainShoppingList');
   };
 
-  return (
+  const loadingComponent = (
+    <View style={styles.mainContainer}>
+      <Text>Загрузка... </Text>
+    </View>
+  );
+
+  const editProductComponent = (
     <View style={styles.mainContainer}>
       <View style={styles.nameInputContainer}>
         <TextInput
@@ -87,6 +92,15 @@ const AddProductScreen = ({navigation}) => {
       </View>
     </View>
   );
+
+  let displayingComponent = null;
+  if (productLoading === true) {
+    displayingComponent = loadingComponent;
+  } else {
+    displayingComponent = editProductComponent;
+  }
+
+  return displayingComponent;
 };
 
 const styles = StyleSheet.create({
@@ -121,8 +135,8 @@ const styles = StyleSheet.create({
   },
 });
 
-AddProductScreen.navigationOptions = ({navigation}) => ({
-  headerTitle: 'Добавление',
+EditProductScreen.navigationOptions = ({navigation}) => ({
+  headerTitle: 'Редактирование',
 });
 
-export default AddProductScreen;
+export default EditProductScreen;

@@ -1,44 +1,89 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {deleteProduct} from '../../store/actions/shoppingListActions';
+import {
+  deleteProduct,
+  changeStatusProduct,
+  loadProduct,
+} from '../../store/actions/shoppingListActions';
+import {
+  PRODUCT_COMPLETED,
+  PRODUCT_NOT_COMPLETED,
+} from '../../storage/data/ProductStatus';
 
-const ShoppingListItem = ({listItem}) => {
+const ShoppingListItem = ({listItem, navigation}) => {
   const dispatch = useDispatch();
+
+  const changeStatusHandler = () => {
+    let newStatus = PRODUCT_NOT_COMPLETED;
+    if (listItem.status === PRODUCT_NOT_COMPLETED) {
+      newStatus = PRODUCT_COMPLETED;
+    }
+    dispatch(changeStatusProduct(newStatus, listItem.id));
+  };
+
+  const editingHandler = () => {
+    dispatch(loadProduct(listItem.id));
+    navigation.navigate('EditScreen');
+  };
 
   const deleteHandler = () => {
     dispatch(deleteProduct(listItem.id));
   };
 
+  let productCompleted = false;
+  if (listItem.status === PRODUCT_COMPLETED) {
+    productCompleted = true;
+  } else {
+    productCompleted = false;
+  }
+
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.infoContainer}>
-        <View style={styles.majorInfoContainer}>
-          <View style={styles.productNameContainer}>
-            <Text
-              style={styles.productName}
-              numberOfLines={1}
-              elipsizeMode="tail">
-              {listItem.name}
-            </Text>
-          </View>
-          <View style={styles.quantityContainer}>
-            <View style={styles.quantityCountContainer}>
-              <Text style={styles.quantityCount} numberOfLines={1}>
-                {listItem.count}
+    <View
+      style={[
+        styles.mainContainer,
+        {backgroundColor: productCompleted ? 'rgba(255,255,255,0.2)' : 'white'},
+      ]}>
+      <TouchableOpacity
+        onPress={changeStatusHandler}
+        style={styles.infoTouchable}
+        onLongPress={editingHandler}>
+        <View style={styles.infoContainer}>
+          <View style={styles.majorInfoContainer}>
+            <View style={styles.productNameContainer}>
+              <Text
+                style={[
+                  styles.productName,
+                  {
+                    color: productCompleted ? 'grey' : 'black',
+                    textDecorationLine: productCompleted
+                      ? 'line-through'
+                      : 'none',
+                  },
+                ]}
+                numberOfLines={1}
+                elipsizeMode="tail">
+                {listItem.name}
               </Text>
             </View>
-            <View style={styles.quantityUnitContainer}>
-              <Text style={styles.quantityUnit} numberOfLines={1}>
-                {listItem.countType}
-              </Text>
+            <View style={styles.quantityContainer}>
+              <View style={styles.quantityCountContainer}>
+                <Text style={styles.quantityCount} numberOfLines={1}>
+                  {listItem.count}
+                </Text>
+              </View>
+              <View style={styles.quantityUnitContainer}>
+                <Text style={styles.quantityUnit} numberOfLines={1}>
+                  {listItem.countType}
+                </Text>
+              </View>
             </View>
           </View>
+          <View style={styles.noteContainer}>
+            <Text style={styles.note}>{listItem.note}</Text>
+          </View>
         </View>
-        <View style={styles.noteContainer}>
-          <Text style={styles.note}>{listItem.note}</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={deleteHandler}>
         <View style={styles.statusContainer}>
           <View style={styles.statusNotFinished} />
@@ -56,6 +101,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 7,
     backgroundColor: 'white',
+  },
+  infoTouchable: {
+    flex: 1,
+    alignSelf: 'stretch',
   },
   statusContainer: {
     width: 60,
