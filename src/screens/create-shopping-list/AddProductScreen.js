@@ -8,6 +8,7 @@ import {
   Button,
   KeyboardAvoidingView,
 } from 'react-native';
+import Reinput from 'reinput';
 import {LoadShoppingList} from '../../store/actions/shoppingListActions';
 import {addProduct} from '../../store/actions/shoppingListActions';
 import MainShoppingListScreen from '../main/MainShoppingListScreen';
@@ -52,29 +53,33 @@ const AddProductScreen = ({navigation}) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.nameInputContainer}>
-        <TextInput
+        <Reinput
           style={styles.nameInput}
+          fontSize={20}
           value={productName}
-          placeholder="Название продукта"
+          label={'Название продукта'}
           onChangeText={productNameChangeHandler}
         />
-        <TextInput
+        <Reinput
           style={styles.quantityInput}
           value={count}
-          placeholder="Количество"
+          label={'Количество'}
+          fontSize={20}
           onChangeText={countChangeHandler}
           keyboardType="numeric"
         />
-        <TextInput
+        <Reinput
           style={styles.unitInput}
           value={countType}
-          placeholder="Единица"
+          label={'Единица'}
+          fontSize={20}
           onChangeText={countTypeChangeHandler}
         />
-        <TextInput
+        <Reinput
           style={styles.noteInput}
           value={note}
-          placeholder="Примечание"
+          label={'Примечание'}
+          fontSize={20}
           onChangeText={noteChangeHandler}
         />
       </View>

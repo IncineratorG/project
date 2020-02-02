@@ -1,5 +1,5 @@
 const icons = {
-  delete: require('./delete.png'),
+  delete: require('./delete3.png'),
 };
 
 export {icons};

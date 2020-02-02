@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View, TextInput, StyleSheet, Button, Text} from 'react-native';
 import {updateProduct} from '../../store/actions/shoppingListActions';
+import Reinput from 'reinput';
 
 const EditProductScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -57,29 +58,33 @@ const EditProductScreen = ({navigation}) => {
   const editProductComponent = (
     <View style={styles.mainContainer}>
       <View style={styles.nameInputContainer}>
-        <TextInput
+        <Reinput
           style={styles.nameInput}
+          fontSize={20}
           value={productName}
-          placeholder="Название продукта"
+          label={'Название продукта'}
           onChangeText={productNameChangeHandler}
         />
-        <TextInput
+        <Reinput
           style={styles.quantityInput}
           value={count}
-          placeholder="Количество"
+          label={'Количество'}
+          fontSize={20}
           onChangeText={countChangeHandler}
           keyboardType="numeric"
         />
-        <TextInput
+        <Reinput
           style={styles.unitInput}
           value={countType}
-          placeholder="Единица"
+          label={'Единица'}
+          fontSize={20}
           onChangeText={countTypeChangeHandler}
         />
-        <TextInput
+        <Reinput
           style={styles.noteInput}
           value={note}
-          placeholder="Примечание"
+          label={'Примечание'}
+          fontSize={20}
           onChangeText={noteChangeHandler}
         />
       </View>

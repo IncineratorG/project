@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {
   deleteProduct,
   changeStatusProduct,
@@ -10,6 +10,7 @@ import {
   PRODUCT_COMPLETED,
   PRODUCT_NOT_COMPLETED,
 } from '../../storage/data/ProductStatus';
+import {icons} from '../../assets/icons';
 
 const ShoppingListItem = ({listItem, navigation}) => {
   const dispatch = useDispatch();
@@ -61,19 +62,39 @@ const ShoppingListItem = ({listItem, navigation}) => {
                       : 'none',
                   },
                 ]}
-                numberOfLines={1}
+                numberOfLines={2}
                 elipsizeMode="tail">
                 {listItem.name}
               </Text>
             </View>
             <View style={styles.quantityContainer}>
               <View style={styles.quantityCountContainer}>
-                <Text style={styles.quantityCount} numberOfLines={1}>
+                <Text
+                  style={[
+                    styles.quantityCount,
+                    {
+                      color: productCompleted ? 'grey' : 'black',
+                      textDecorationLine: productCompleted
+                        ? 'line-through'
+                        : 'none',
+                    },
+                  ]}
+                  numberOfLines={1}>
                   {listItem.count}
                 </Text>
               </View>
               <View style={styles.quantityUnitContainer}>
-                <Text style={styles.quantityUnit} numberOfLines={1}>
+                <Text
+                  style={[
+                    styles.quantityUnit,
+                    {
+                      color: productCompleted ? 'grey' : 'black',
+                      textDecorationLine: productCompleted
+                        ? 'line-through'
+                        : 'none',
+                    },
+                  ]}
+                  numberOfLines={1}>
                   {listItem.countType}
                 </Text>
               </View>
@@ -85,8 +106,8 @@ const ShoppingListItem = ({listItem, navigation}) => {
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={deleteHandler}>
-        <View style={styles.statusContainer}>
-          <View style={styles.statusNotFinished} />
+        <View style={styles.deleteContainer}>
+          <Image style={styles.deleteButton} source={icons.delete} />
         </View>
       </TouchableOpacity>
     </View>
@@ -100,25 +121,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 7,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
+    borderRadius: 12,
   },
   infoTouchable: {
     flex: 1,
     alignSelf: 'stretch',
   },
-  statusContainer: {
+  deleteContainer: {
     width: 60,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
     // backgroundColor: 'green',
   },
-  statusNotFinished: {
+  deleteButton: {
     width: 30,
     height: 30,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     borderRadius: 15,
-    elevation: 6,
+    // elevation: 6,
     // marginRight: 10,
   },
   // контэйнер, в кот-ом распологается название продукта, кол-во и примечание.
