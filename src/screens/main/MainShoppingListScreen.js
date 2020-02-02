@@ -88,7 +88,7 @@ const MainShoppingListScreen = ({navigation}) => {
   const emptyShoppingListComponent = (
     <View style={styles.mainContainer}>
       <Text style={styles.noProduct}> Ваш список пуст</Text>
-      <View style={styles.addButton}>
+      <View style={styles.addButtonNoProduct}>
         <Button title={'Добавить'} onPress={addProductHandler} />
       </View>
     </View>
@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     padding: 10,
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    // alignItems: 'center',
   },
   noProduct: {
     justifyContent: 'center',
@@ -182,6 +183,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     elevation: 8,
     borderRadius: 30,
+  },
+  addButtonNoProduct: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    justifyContent: 'flex-end',
   },
 });
 
