@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import AppNavigation from './src/components/navigation/AppNavigation';
 import {SqliteStorage} from './src/storage/SqliteStorage';
+import {SqliteStorageShoppingList} from './src/storage/SqliteStorageShoppingList';
 import {AppLoading} from './src/common/AppLoading';
 import store from './src/store';
 import {Provider} from 'react-redux';
@@ -11,7 +12,7 @@ export default function App() {
   if (!isReady) {
     return (
       <AppLoading
-        startAsync={SqliteStorage.init}
+        startAsync={SqliteStorageShoppingList.init}
         onFinish={() => setIsReady(true)}
         onError={err => console.log('App.js: ' + err)}
       />
