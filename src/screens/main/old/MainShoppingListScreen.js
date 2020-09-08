@@ -9,13 +9,13 @@ import {
   SectionList,
   Alert,
 } from 'react-native';
-import ShoppingListItem from '../../components/shopping-list-screen/ShoppingListItem';
-import {LoadShoppingList} from '../../store/actions/shoppingListActions';
-import {deleteAllProducts} from '../../store/actions/shoppingListActions';
+import ShoppingListItem from '../../../components/shopping-list-screen/ShoppingListItem';
+import {LoadShoppingList} from '../../../store/actions/shoppingListActions';
+import {deleteAllProducts} from '../../../store/actions/shoppingListActions';
 import {
   PRODUCT_COMPLETED,
   PRODUCT_NOT_COMPLETED,
-} from '../../storage/data/ProductStatus';
+} from '../../../storage/data/ProductStatus';
 
 const MainShoppingListScreen = ({navigation}) => {
   const dispatch = useDispatch();

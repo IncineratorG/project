@@ -12,24 +12,24 @@ import {
 } from '../../storage/data/ProductStatus';
 import {icons} from '../../assets/icons';
 
-const ShoppingListItem = ({listItem, navigation}) => {
+const ShoppingListItem = ({
+  listItem,
+  onChangeStatus,
+  onEditItem,
+  onDeleteItem,
+}) => {
   const dispatch = useDispatch();
 
   const changeStatusHandler = () => {
-    let newStatus = PRODUCT_NOT_COMPLETED;
-    if (listItem.status === PRODUCT_NOT_COMPLETED) {
-      newStatus = PRODUCT_COMPLETED;
-    }
-    dispatch(changeStatusProduct(newStatus, listItem.id));
+    onChangeStatus(listItem);
   };
 
   const editingHandler = () => {
-    dispatch(loadProduct(listItem.id));
-    navigation.navigate('EditScreen');
+    onEditItem(listItem);
   };
 
   const deleteHandler = () => {
-    dispatch(deleteProduct(listItem.id));
+    onDeleteItem(listItem);
   };
 
   let productCompleted = false;
@@ -43,7 +43,7 @@ const ShoppingListItem = ({listItem, navigation}) => {
     <View
       style={[
         styles.mainContainer,
-        {backgroundColor: productCompleted ? 'rgba(255,255,255,0.2)' : 'white'},
+        {backgroundColor: productCompleted ? 'white' : 'rgba(170,231,250,0.3)'},
       ]}>
       <TouchableOpacity
         onPress={changeStatusHandler}

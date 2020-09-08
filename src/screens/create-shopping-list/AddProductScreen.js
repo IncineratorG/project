@@ -11,7 +11,6 @@ import {
 import Reinput from 'reinput';
 import {LoadShoppingList} from '../../store/actions/shoppingListActions';
 import {addProduct} from '../../store/actions/shoppingListActions';
-import MainShoppingListScreen from '../main/MainShoppingListScreen';
 
 const AddProductScreen = ({navigation}) => {
   const dispatch = useDispatch();
